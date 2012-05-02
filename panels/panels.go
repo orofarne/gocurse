@@ -1,12 +1,13 @@
 package panels
 
+// #cgo LDFLAGS: -lpanel
 // struct _win_st{};
 // #define _Bool int
 // #include <panel.h>
 import "C"
 
 import (
-	. "curses"
+	. "github.com/zyxar/gocurse/curses"
 )
 
 type Panel C.PANEL

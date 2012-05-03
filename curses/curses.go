@@ -134,7 +134,7 @@ func DoUpdate() error {
 }
 
 func Echo() error {
-	if int(C.noecho()) == 0 {
+	if int(C.echo()) == 0 {
 		return CursesError{"Echo failed"}
 	}
 	return nil

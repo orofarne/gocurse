@@ -1,8 +1,6 @@
 package curses
 
 // #cgo LDFLAGS: -lncurses
-// struct ldat{};
-// struct _win_st{};
 // #define _Bool int
 // #define NCURSES_OPAQUE 1
 // #include <curses.h>

@@ -1,7 +1,6 @@
 package menus
 
 // #cgo LDFLAGS: -lmenu
-// struct _win_st{};
 // #define _Bool int
 // #include <menu.h>
 import "C"

@@ -1,7 +1,6 @@
 package panels
 
 // #cgo LDFLAGS: -lpanel
-// struct _win_st{};
 // #define _Bool int
 // #include <panel.h>
 import "C"
@@ -52,15 +51,12 @@ func (panel *Panel) Below() *Panel {
 	return (*Panel)(C.panel_below((*C.PANEL)(panel)))
 }
 
-//extern NCURSES_EXPORT(int)     set_panel_userptr (PANEL *, NCURSES_CONST void *);
-//extern NCURSES_EXPORT(NCURSES_CONST void*) panel_userptr (const PANEL *);
-
 func (panel *Panel) Move(y, x int) bool {
-	return isOk(C.move_panel((*C.PANEL)(panel),C.int(y),C.int(x)))
+	return isOk(C.move_panel((*C.PANEL)(panel), C.int(y), C.int(x)))
 }
 
 func (panel *Panel) Replace(win *Window) bool {
-	return isOk(C.replace_panel((*C.PANEL)(panel),(*C.WINDOW)(win)))
+	return isOk(C.replace_panel((*C.PANEL)(panel), (*C.WINDOW)(win)))
 }
 
 func (panel *Panel) Hidden() bool {

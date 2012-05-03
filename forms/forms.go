@@ -1,7 +1,6 @@
 package forms
 
 // #cgo LDFLAGS: -lform
-// struct _win_st{};
 // #define _Bool int
 // #include <form.h>
 import "C"

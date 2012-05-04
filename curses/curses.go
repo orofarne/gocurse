@@ -23,14 +23,12 @@ func (ce CursesError) Error() string {
 	return ce.message
 }
 
-// Cursor options.
 const (
 	CURS_HIDE = iota
 	CURS_NORM
 	CURS_HIGH
 )
 
-// Pointers to the values in curses, which may change values.
 var Cols *int = nil
 var Rows *int = nil
 
@@ -39,7 +37,6 @@ var ColorPairs *int = nil
 
 var Tabsize *int = nil
 
-// Initializes gocurses
 func init() {
 	Cols = (*int)(void(&C.COLS))
 	Rows = (*int)(void(&C.LINES))
@@ -68,6 +65,18 @@ func InitPair(pair int, fg int, bg int) error {
 
 func ColorPair(pair int) int32 {
 	return int32(C.COLOR_PAIR(C.int(pair)))
+}
+
+func PairNumber(f int32) int {
+	return int(C.PAIR_NUMBER(C.int(f)))
+}
+
+func Nl() {
+	C.nl()
+}
+
+func Nonl() {
+	C.nonl()
 }
 
 func Noecho() error {

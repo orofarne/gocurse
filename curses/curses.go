@@ -4,6 +4,7 @@ package curses
 // #define _Bool int
 // #define NCURSES_OPAQUE 1
 // #include <curses.h>
+// #include <stdlib.h>
 import "C"
 
 import (
@@ -49,7 +50,7 @@ func init() {
 	Tabsize = (*int)(void(&C.TABSIZE))
 }
 
-func Start_color() error {
+func StartColor() error {
 	if C.has_colors() == C.ERR {
 		return CursesError{"terminal does not support color"}
 	}
@@ -58,62 +59,127 @@ func Start_color() error {
 	return nil
 }
 
-func Init_pair(pair int, fg int, bg int) error {
+func InitPair(pair int, fg int, bg int) error {
 	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == C.ERR {
-		return CursesError{"Init_pair failed"}
+		return CursesError{"init_pair failed"}
 	}
 	return nil
 }
 
-func Color_pair(pair int) int32 {
+func ColorPair(pair int) int32 {
 	return int32(C.COLOR_PAIR(C.int(pair)))
 }
 
 func Noecho() error {
 	if C.noecho() == C.ERR {
-		return CursesError{"Noecho failed"}
+		return CursesError{"noecho failed"}
 	}
 	return nil
 }
 
-func DoUpdate() error {
+func Doupdate() error {
 	if C.doupdate() == C.ERR {
-		return CursesError{"Doupdate failed"}
+		return CursesError{"doupdate failed"}
 	}
 	return nil
 }
 
 func Echo() error {
 	if C.echo() == C.ERR {
-		return CursesError{"Echo failed"}
+		return CursesError{"echo failed"}
 	}
 	return nil
 }
 
-func Curs_set(c int) error {
+func CursSet(c int) error {
 	if C.curs_set(C.int(c)) == C.ERR {
-		return CursesError{"Curs_set failed"}
+		return CursesError{"curs_set failed"}
 	}
 	return nil
+}
+
+func Typeahead(fd int) error {
+	if C.typeahead(C.int(fd)) == C.ERR {
+		return CursesError{"typeahead failed"}
+	}
+	return nil
+}
+
+func HasKey(keycode int) bool {
+	switch r := C.has_key(C.int(keycode)); r {
+	case C.FALSE:
+		return false
+	case C.TRUE:
+		return true
+	}
+	panic("unreachable!")
+}
+
+func Mcprint(data string) error {
+	da := C.CString(data)
+	defer C.free(unsafe.Pointer(da))
+	if C.mcprint(da, C.int(len(data))) == C.ERR {
+		return CursesError{"mcprint failed"}
+	}
+	return nil
+}
+
+func Raw() error {
+	if C.raw() == C.ERR {
+		return CursesError{"raw failed"}
+	}
+	return nil
+}
+
+func Qiflush() {
+	C.qiflush()
+}
+
+func Noraw() error {
+	if C.noraw() == C.ERR {
+		return CursesError{"noraw failed"}
+	}
+	return nil
+}
+
+func Noqiflush() {
+	C.noqiflush()
 }
 
 func Nocbreak() error {
 	if C.nocbreak() == C.ERR {
-		return CursesError{"Nocbreak failed"}
+		return CursesError{"nocbreak failed"}
 	}
 	return nil
 }
 
 func Cbreak() error {
 	if C.cbreak() == C.ERR {
-		return CursesError{"Cbreak failed"}
+		return CursesError{"cbreak failed"}
 	}
 	return nil
 }
 
 func Endwin() error {
 	if C.endwin() == C.ERR {
-		return CursesError{"Endwin failed"}
+		return CursesError{"endwin failed"}
 	}
 	return nil
+}
+
+/*func SetTablesize(value int) error {
+	if C.set_tablesize(C.int(value)) == C.ERR {
+		return CursesError{"set_tablesize failed"}
+	}
+	return nil
+}*/
+
+func UseEnv(b bool) {
+	C.use_env(bool2cint(b))
+}
+
+//func Setupterm(tname string, fd int) (int, error) 
+
+func Termname() string {
+	return C.GoString(C.termname())
 }

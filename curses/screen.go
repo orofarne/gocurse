@@ -12,6 +12,12 @@ import (
 
 type Screen C.SCREEN
 
+var (
+    Stdscr = C.stdscr
+    Newscr = C.newscr
+    Curscr = C.curscr
+)
+
 func Newterm(s string, out, in *os.File) (*Screen, error) {
     cs := C.CString(s)
     defer C.free(unsafe.Pointer(cs))
@@ -40,3 +46,8 @@ func SetTerm(scr *Screen) *Screen {
     ret := C.set_term((*C.SCREEN)(scr))
     return (*Screen)(ret)
 }
+
+/*func NewPerscr() *Screen {
+    return (*Screen)(C.new_prescr())
+}
+*/

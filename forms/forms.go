@@ -6,7 +6,7 @@ package forms
 import "C"
 
 import (
-	. "github.com/jabb/gocurse/curses"
+	. "github.com/dsymonds/gocurse/curses"
 	"unsafe"
 )
 

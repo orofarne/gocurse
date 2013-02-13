@@ -1,6 +1,6 @@
 package main
 
-import . "github.com/zyxar/gocurse/curses"
+import . "github.com/dsymonds/gocurse/curses"
 import "os"
 import "fmt"
 

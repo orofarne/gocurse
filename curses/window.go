@@ -37,7 +37,7 @@ func Newwin(rows int, cols int, starty int, startx int) (*Window, error) {
 
 func Newpad(y, x int) (*Window, error) {
 	npw, err := C.newpad(C.int(y), C.int(x))
-    np := (*Window)(npw)
+	np := (*Window)(npw)
 	if err != nil && np == nil {
 		return nil, CursesError{fmt.Sprintf("newpad failed: %v", err)}
 	}
@@ -61,7 +61,7 @@ func (win *Window) Subwin(rows, cols, starty, startx int) (*Window, error) {
 
 func (win *Window) Subpad(rows, cols, starty, startx int) (*Window, error) {
 	spw, err := C.subpad((*C.WINDOW)(win), C.int(rows), C.int(cols), C.int(starty), C.int(startx))
-    sp := (*Window)(spw)
+	sp := (*Window)(spw)
 	if err != nil && sp == nil {
 		return nil, CursesError{fmt.Sprintf("subpad failed: %v", err)}
 	}
@@ -89,12 +89,12 @@ func (win *Window) Getch() int {
 }
 
 func (win *Window) Getnstr(length int) (string, error) {
-    buf := make([]byte, length)
-    r := C.wgetnstr((*C.WINDOW)(win), (*C.char)(unsafe.Pointer(&buf[0])), C.int(length))
-    if r == C.ERR {
-        return string(buf), CursesError{"wgetnstr failed"}
-    }
-    return string(buf), nil
+	buf := make([]byte, length)
+	r := C.wgetnstr((*C.WINDOW)(win), (*C.char)(unsafe.Pointer(&buf[0])), C.int(length))
+	if r == C.ERR {
+		return string(buf), CursesError{"wgetnstr failed"}
+	}
+	return string(buf), nil
 }
 
 // func (win *Window) Getstr() (string, error) {
@@ -135,46 +135,46 @@ func (win *Window) Redrawin() error {
 	return nil
 }
 
-func (win *Window) Scroll() (error) {
-    if C.scroll((*C.WINDOW)(win)) == C.ERR {
-        return CursesError{"scroll failed"}
-    }
-    return nil
+func (win *Window) Scroll() error {
+	if C.scroll((*C.WINDOW)(win)) == C.ERR {
+		return CursesError{"scroll failed"}
+	}
+	return nil
 }
 
-func (win *Window) Scrollok(b bool) (error) {
-    if C.scrollok((*C.WINDOW)(win), bool2cint(b)) == C.ERR {
-        return CursesError{"scrollok failed"}
-    }
-    return nil
+func (win *Window) Scrollok(b bool) error {
+	if C.scrollok((*C.WINDOW)(win), bool2cint(b)) == C.ERR {
+		return CursesError{"scrollok failed"}
+	}
+	return nil
 }
 
-func (win *Window) Syncok(b bool) (error) {
-    if C.syncok((*C.WINDOW)(win), bool2cint(b)) == C.ERR {
-        return CursesError{"syncok failed"}
-    }
-    return nil
+func (win *Window) Syncok(b bool) error {
+	if C.syncok((*C.WINDOW)(win), bool2cint(b)) == C.ERR {
+		return CursesError{"syncok failed"}
+	}
+	return nil
 }
 
-func (win *Window) Touchline(y, x int) (error) {
-    if C.touchline((*C.WINDOW)(win), C.int(y), C.int(x)) == C.ERR {
-        return CursesError{"touchline failed"}
-    }
-    return nil
+func (win *Window) Touchline(y, x int) error {
+	if C.touchline((*C.WINDOW)(win), C.int(y), C.int(x)) == C.ERR {
+		return CursesError{"touchline failed"}
+	}
+	return nil
 }
 
-func (win *Window) Touchwin() (error) {
-    if C.touchwin((*C.WINDOW)(win)) == C.ERR {
-        return CursesError{"touchwin failed"}
-    }
-    return nil
+func (win *Window) Touchwin() error {
+	if C.touchwin((*C.WINDOW)(win)) == C.ERR {
+		return CursesError{"touchwin failed"}
+	}
+	return nil
 }
 
-func (win *Window) Untouchwin() (error) {
-    if C.untouchwin((*C.WINDOW)(win)) == C.ERR {
-        return CursesError{"untouchwin failed"}
-    }
-    return nil
+func (win *Window) Untouchwin() error {
+	if C.untouchwin((*C.WINDOW)(win)) == C.ERR {
+		return CursesError{"untouchwin failed"}
+	}
+	return nil
 }
 
 func (win *Window) Clear() error {
@@ -509,67 +509,67 @@ func (win *Window) Mvvline(y, x int, ch chtype, n int) error {
 	return nil
 }
 
-func (win *Window) Getattrs() (int) {
-    return int(C.getattrs((*C.WINDOW)(win)))
+func (win *Window) Getattrs() int {
+	return int(C.getattrs((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getcurx() (int) {
-    return int(C.getcurx((*C.WINDOW)(win)))
+func (win *Window) Getcurx() int {
+	return int(C.getcurx((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getcury() (int) {
-    return int(C.getcury((*C.WINDOW)(win)))
+func (win *Window) Getcury() int {
+	return int(C.getcury((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getbegx() (int) {
-    return int(C.getbegx((*C.WINDOW)(win)))
+func (win *Window) Getbegx() int {
+	return int(C.getbegx((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getbegy() (int) {
-    return int(C.getbegy((*C.WINDOW)(win)))
+func (win *Window) Getbegy() int {
+	return int(C.getbegy((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getmaxx() (int) {
-    return int(C.getmaxx((*C.WINDOW)(win)))
+func (win *Window) Getmaxx() int {
+	return int(C.getmaxx((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getmaxy() (int) {
-    return int(C.getmaxy((*C.WINDOW)(win)))
+func (win *Window) Getmaxy() int {
+	return int(C.getmaxy((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getparx() (int) {
-    return int(C.getparx((*C.WINDOW)(win)))
+func (win *Window) Getparx() int {
+	return int(C.getparx((*C.WINDOW)(win)))
 }
 
-func (win *Window) Getpary() (int) {
-    return int(C.getpary((*C.WINDOW)(win)))
+func (win *Window) Getpary() int {
+	return int(C.getpary((*C.WINDOW)(win)))
 }
 
-func (win *Window) Standout() (error) {
-    if C.wstandout((*C.WINDOW)(win)) == C.ERR {
-        return CursesError{"wstandout failed"}
-    }
-    return nil
+func (win *Window) Standout() error {
+	if C.wstandout((*C.WINDOW)(win)) == C.ERR {
+		return CursesError{"wstandout failed"}
+	}
+	return nil
 }
 
 func (win *Window) Standend() error {
-    if C.wstandend((*C.WINDOW)(win)) == C.ERR {
-        return CursesError{"wstandend failed"}
-    }
-    return nil
+	if C.wstandend((*C.WINDOW)(win)) == C.ERR {
+		return CursesError{"wstandend failed"}
+	}
+	return nil
 }
 
 func (win *Window) Syncdown() {
-    C.wsyncdown((*C.WINDOW)(win))
+	C.wsyncdown((*C.WINDOW)(win))
 }
 
 func (win *Window) Syncup() {
-    C.wsyncup((*C.WINDOW)(win))
+	C.wsyncup((*C.WINDOW)(win))
 }
 
 func (win *Window) Enclose(y, x int) bool {
-    if C.wenclose((*C.WINDOW)(win), C.int(y), C.int(x)) == C.FALSE {
-        return false
-    }
-    return true
+	if C.wenclose((*C.WINDOW)(win), C.int(y), C.int(x)) == C.FALSE {
+		return false
+	}
+	return true
 }

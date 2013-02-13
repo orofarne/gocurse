@@ -573,3 +573,10 @@ func (win *Window) Enclose(y, x int) bool {
 	}
 	return true
 }
+
+func (win *Window) SetScrollRegion(top, bottom int) error {
+	if C.wsetscrreg((*C.WINDOW)(win), C.int(top), C.int(bottom)) == C.ERR {
+		return CursesError{"wsetscrreg failed"}
+	}
+	return nil
+}

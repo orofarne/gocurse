@@ -50,7 +50,7 @@ func init() {
 }
 
 func Start_color() error {
-	if int(C.has_colors()) == 0 {
+	if int(C.has_colors()) == ERR {
 		return CursesError{"terminal does not support color"}
 	}
 	C.start_color()
@@ -59,7 +59,7 @@ func Start_color() error {
 }
 
 func Init_pair(pair int, fg int, bg int) error {
-	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == 0 {
+	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == ERR {
 		return CursesError{"Init_pair failed"}
 	}
 	return nil
@@ -70,49 +70,49 @@ func Color_pair(pair int) int {
 }
 
 func Noecho() error {
-	if int(C.noecho()) == 0 {
+	if int(C.noecho()) == ERR {
 		return CursesError{"Noecho failed"}
 	}
 	return nil
 }
 
 func DoUpdate() error {
-	if int(C.doupdate()) == 0 {
+	if int(C.doupdate()) == ERR {
 		return CursesError{"Doupdate failed"}
 	}
 	return nil
 }
 
 func Echo() error {
-	if int(C.noecho()) == 0 {
+	if int(C.noecho()) == ERR {
 		return CursesError{"Echo failed"}
 	}
 	return nil
 }
 
 func Curs_set(c int) error {
-	if C.curs_set(C.int(c)) == 0 {
+	if C.curs_set(C.int(c)) == ERR {
 		return CursesError{"Curs_set failed"}
 	}
 	return nil
 }
 
 func Nocbreak() error {
-	if C.nocbreak() == 0 {
+	if C.nocbreak() == ERR {
 		return CursesError{"Nocbreak failed"}
 	}
 	return nil
 }
 
 func Cbreak() error {
-	if C.cbreak() == 0 {
+	if C.cbreak() == ERR {
 		return CursesError{"Cbreak failed"}
 	}
 	return nil
 }
 
 func Endwin() error {
-	if C.endwin() == 0 {
+	if C.endwin() == ERR {
 		return CursesError{"Endwin failed"}
 	}
 	return nil

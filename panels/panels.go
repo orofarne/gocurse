@@ -1,18 +1,19 @@
 package panels
 
-// #cgo LDFLAGS: -lpanel
 // #define _Bool int
 // #include <panel.h>
+// #cgo LDFLAGS: -lpanel -lncurses
 import "C"
 
 import (
-	. "github.com/zyxar/gocurse/curses"
+	. "github.com/jabb/gocurse/curses"
+	"unsafe"
 )
 
 type Panel C.PANEL
 
 func (panel *Panel) Window() *Window {
-	return (*Window)(C.panel_window((*C.PANEL)(panel)))
+	return (*Window)(unsafe.Pointer((C.panel_window((*C.PANEL)(panel)))))
 }
 
 func UpdatePanels() {
@@ -40,7 +41,7 @@ func (panel *Panel) Bottom() bool {
 }
 
 func NewPanel(win *Window) *Panel {
-	return (*Panel)(C.new_panel((*C.WINDOW)(win)))
+	return (*Panel)(C.new_panel((*C.WINDOW)(unsafe.Pointer((win)))))
 }
 
 func (panel *Panel) Above() *Panel {
@@ -56,7 +57,7 @@ func (panel *Panel) Move(y, x int) bool {
 }
 
 func (panel *Panel) Replace(win *Window) bool {
-	return isOk(C.replace_panel((*C.PANEL)(panel), (*C.WINDOW)(win)))
+	return isOk(C.replace_panel((*C.PANEL)(panel), (*C.WINDOW)(unsafe.Pointer((win)))))
 }
 
 func (panel *Panel) Hidden() bool {

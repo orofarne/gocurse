@@ -1,12 +1,12 @@
 package menus
 
-// #cgo LDFLAGS: -lmenu
 // #define _Bool int
 // #include <menu.h>
+// #cgo LDFLAGS: -lmenu -lncurses
 import "C"
 
 import (
-	. "github.com/zyxar/gocurse/curses"
+	. "github.com/jabb/gocurse/curses"
 	"unsafe"
 )
 
@@ -167,19 +167,19 @@ func (menu *Menu) SetCurrentItem(item *Item) bool {
 }
 
 func (menu *Menu) SetWin(win *Window) bool {
-	return isOk(C.set_menu_win((*C.MENU)(menu), (*C.WINDOW)(win)))
+	return isOk(C.set_menu_win((*C.MENU)(menu), (*C.WINDOW)(unsafe.Pointer(win))))
 }
 
 func (menu *Menu) Win() *Window {
-	return (*Window)(C.menu_win((*C.MENU)(menu)))
+	return (*Window)(unsafe.Pointer((C.menu_win((*C.MENU)(menu)))))
 }
 
 func (menu *Menu) SetSub(win *Window) bool {
-	return isOk(C.set_menu_sub((*C.MENU)(menu), (*C.WINDOW)(win)))
+	return isOk(C.set_menu_sub((*C.MENU)(menu), (*C.WINDOW)(unsafe.Pointer(win))))
 }
 
 func (menu *Menu) Sub() *Window {
-	return (*Window)(C.menu_sub((*C.MENU)(menu)))
+	return (*Window)(unsafe.Pointer((C.menu_sub((*C.MENU)(menu)))))
 }
 
 func (item *Item) Value() bool {

@@ -1,5 +1,6 @@
 package curses
 
+// #define _Bool int
 // #include <curses.h>
 import "C"
 

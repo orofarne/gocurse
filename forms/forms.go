@@ -1,11 +1,14 @@
 package forms
 
-// #cgo LDFLAGS: -lform
 // #define _Bool int
 // #include <form.h>
+// #cgo LDFLAGS: -lform -lncurses
 import "C"
 
-import . "github.com/zyxar/gocurse/curses"
+import (
+	. "github.com/jabb/gocurse/curses"
+	"unsafe"
+)
 
 type Field C.FIELD
 type Form C.FORM
@@ -338,17 +341,17 @@ func (form *Form) Scale() (int, int, error) {
 }
 
 func (form *Form) SetWin(window *Window) bool {
-	return isOk(C.set_form_win((*C.FORM)(form), (*C.WINDOW)(window)))
+	return isOk(C.set_form_win((*C.FORM)(form), (*C.WINDOW)(unsafe.Pointer(window))))
 }
 
 func (form *Form) SetSub(window *Window) bool {
-	return isOk(C.set_form_sub((*C.FORM)(form), (*C.WINDOW)(window)))
+	return isOk(C.set_form_sub((*C.FORM)(form), (*C.WINDOW)(unsafe.Pointer(window))))
 }
 
 func (form *Form) Win() *Window {
-	return (*Window)(C.form_win((*C.FORM)(form)))
+	return (*Window)(unsafe.Pointer((C.form_win((*C.FORM)(form)))))
 }
 
 func (form *Form) Sub() *Window {
-	return (*Window)(C.form_sub((*C.FORM)(form)))
+	return (*Window)(unsafe.Pointer((C.form_sub((*C.FORM)(form)))))
 }

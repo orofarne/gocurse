@@ -1,13 +1,15 @@
 package curses
 
-// #cgo LDFLAGS: -lncurses
+// struct _win_st{};
+// struct ldat{};
 // #define _Bool int
 // #define NCURSES_OPAQUE 1
 // #include <curses.h>
-// #include <stdlib.h>
+// #cgo LDFLAGS: -lncurses
 import "C"
 
 import (
+	"fmt"
 	"unsafe"
 )
 
@@ -29,6 +31,7 @@ const (
 	CURS_HIGH
 )
 
+// Pointers to the values in curses, which may change values.
 var Cols *int = nil
 var Rows *int = nil
 
@@ -36,6 +39,9 @@ var Colors *int = nil
 var ColorPairs *int = nil
 
 var Tabsize *int = nil
+
+// The window returned from C.initscr()
+var Stdwin *Window = nil
 
 func init() {
 	Cols = (*int)(void(&C.COLS))
@@ -47,8 +53,57 @@ func init() {
 	Tabsize = (*int)(void(&C.TABSIZE))
 }
 
-func StartColor() error {
-	if C.has_colors() == C.ERR {
+func Initscr() (*Window, error) {
+	Stdwin = (*Window)(C.initscr())
+
+	if Stdwin == nil {
+		return nil, CursesError{"Initscr failed"}
+	}
+
+	return Stdwin, nil
+}
+
+func Newwin(rows int, cols int, starty int, startx int) (*Window, error) {
+	nw := (*Window)(C.newwin(C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
+
+	if nw == nil {
+		return nil, CursesError{"Failed to create window"}
+	}
+
+	return nw, nil
+}
+
+func (win *Window) Del() error {
+	if int(C.delwin((*C.WINDOW)(win))) == 0 {
+		return CursesError{"delete failed"}
+	}
+	C.start_color()
+
+	return nil
+}
+
+func (win *Window) Subwin(rows int, cols int, starty int, startx int) (*Window, error) {
+	sw := (*Window)(C.subwin((*C.WINDOW)(win), C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
+
+	if sw == nil {
+		return nil, CursesError{"Failed to create window"}
+	}
+
+	return sw, nil
+}
+
+func (win *Window) Derwin(rows int, cols int, starty int, startx int) (*Window, error) {
+	dw := (*Window)(C.derwin((*C.WINDOW)(win), C.int(rows), C.int(cols), C.int(starty), C.int(startx)))
+
+	if dw == nil {
+		return nil, CursesError{"Failed to create window"}
+	}
+
+	return dw, nil
+}
+
+func Start_color() error {
+	if int(C.has_colors()) == 0 {
 		return CursesError{"terminal does not support color"}
 	}
 	C.start_color()
@@ -56,139 +111,158 @@ func StartColor() error {
 	return nil
 }
 
-func InitPair(pair int, fg int, bg int) error {
-	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == C.ERR {
-		return CursesError{"init_pair failed"}
+func Init_pair(pair int, fg int, bg int) error {
+	if C.init_pair(C.short(pair), C.short(fg), C.short(bg)) == 0 {
+		return CursesError{"Init_pair failed"}
 	}
 	return nil
 }
 
-func ColorPair(pair int) int32 {
+func Color_pair(pair int) int32 {
 	return int32(C.COLOR_PAIR(C.int(pair)))
 }
 
-func PairNumber(f int32) int {
-	return int(C.PAIR_NUMBER(C.int(f)))
-}
-
-func Nl() {
-	C.nl()
-}
-
-func Nonl() {
-	C.nonl()
-}
-
 func Noecho() error {
-	if C.noecho() == C.ERR {
-		return CursesError{"noecho failed"}
+	if int(C.noecho()) == 0 {
+		return CursesError{"Noecho failed"}
 	}
 	return nil
 }
 
-func Doupdate() error {
-	if C.doupdate() == C.ERR {
-		return CursesError{"doupdate failed"}
+func DoUpdate() error {
+	if int(C.doupdate()) == 0 {
+		return CursesError{"Doupdate failed"}
 	}
 	return nil
 }
 
 func Echo() error {
-	if C.echo() == C.ERR {
-		return CursesError{"echo failed"}
+	if int(C.noecho()) == 0 {
+		return CursesError{"Echo failed"}
 	}
 	return nil
 }
 
-func CursSet(c int) error {
-	if C.curs_set(C.int(c)) == C.ERR {
-		return CursesError{"curs_set failed"}
+func Curs_set(c int) error {
+	if C.curs_set(C.int(c)) == 0 {
+		return CursesError{"Curs_set failed"}
 	}
 	return nil
-}
-
-func Typeahead(fd int) error {
-	if C.typeahead(C.int(fd)) == C.ERR {
-		return CursesError{"typeahead failed"}
-	}
-	return nil
-}
-
-func HasKey(keycode int) bool {
-	switch r := C.has_key(C.int(keycode)); r {
-	case C.FALSE:
-		return false
-	case C.TRUE:
-		return true
-	}
-	panic("unreachable!")
-}
-
-func Mcprint(data string) error {
-	da := C.CString(data)
-	defer C.free(unsafe.Pointer(da))
-	if C.mcprint(da, C.int(len(data))) == C.ERR {
-		return CursesError{"mcprint failed"}
-	}
-	return nil
-}
-
-func Raw() error {
-	if C.raw() == C.ERR {
-		return CursesError{"raw failed"}
-	}
-	return nil
-}
-
-func Qiflush() {
-	C.qiflush()
-}
-
-func Noraw() error {
-	if C.noraw() == C.ERR {
-		return CursesError{"noraw failed"}
-	}
-	return nil
-}
-
-func Noqiflush() {
-	C.noqiflush()
 }
 
 func Nocbreak() error {
-	if C.nocbreak() == C.ERR {
-		return CursesError{"nocbreak failed"}
+	if C.nocbreak() == 0 {
+		return CursesError{"Nocbreak failed"}
 	}
 	return nil
 }
 
 func Cbreak() error {
-	if C.cbreak() == C.ERR {
-		return CursesError{"cbreak failed"}
+	if C.cbreak() == 0 {
+		return CursesError{"Cbreak failed"}
 	}
 	return nil
 }
 
 func Endwin() error {
-	if C.endwin() == C.ERR {
-		return CursesError{"endwin failed"}
+	if C.endwin() == 0 {
+		return CursesError{"Endwin failed"}
 	}
 	return nil
 }
 
-/*func SetTablesize(value int) error {
-	if C.set_tablesize(C.int(value)) == C.ERR {
-		return CursesError{"set_tablesize failed"}
-	}
-	return nil
-}*/
-
-func UseEnv(b bool) {
-	C.use_env(bool2cint(b))
+func (win *Window) Getch() int {
+	return int(C.wgetch((*C.WINDOW)(win)))
 }
 
-//func Setupterm(tname string, fd int) (int, error) 
+func (win *Window) Addch(x, y int, c int32, flags int32) {
+	C.mvwaddch((*C.WINDOW)(win), C.int(y), C.int(x), C.chtype(c)|C.chtype(flags))
+}
 
-func Termname() string {
-	return C.GoString(C.termname())
+// Since CGO currently can't handle varg C functions we'll mimic the
+// ncurses addstr functions.
+func (win *Window) Addstr(x, y int, str string, flags int32, v ...interface{}) {
+	var newstr string
+	if v != nil {
+		newstr = fmt.Sprintf(str, v)
+	} else {
+		newstr = str
+	}
+
+	win.Move(x, y)
+
+	for i := 0; i < len(newstr); i++ {
+		C.waddch((*C.WINDOW)(win), C.chtype(newstr[i])|C.chtype(flags))
+	}
+	return nil
+}
+
+// Normally Y is the first parameter passed in curses.
+func (win *Window) Move(x, y int) {
+	C.wmove((*C.WINDOW)(win), C.int(y), C.int(x))
+}
+
+func (win *Window) Resize(rows, cols int) {
+	C.wresize((*C.WINDOW)(win), C.int(rows), C.int(cols))
+}
+
+func (w *Window) Keypad(tf bool) error {
+	var outint int
+	if tf == true {
+		outint = 1
+	}
+	if tf == false {
+		outint = 0
+	}
+	if C.keypad((*C.WINDOW)(w), C.int(outint)) == 0 {
+		return CursesError{"Keypad failed"}
+	}
+	return nil
+}
+
+func (win *Window) Refresh() error {
+	if C.wrefresh((*C.WINDOW)(win)) == 0 {
+		return CursesError{"refresh failed"}
+	}
+	return nil
+}
+
+func (win *Window) Redrawln(beg_line, num_lines int) {
+	C.wredrawln((*C.WINDOW)(win), C.int(beg_line), C.int(num_lines))
+}
+
+func (win *Window) Redraw() {
+	C.redrawwin((*C.WINDOW)(win))
+}
+
+func (win *Window) Clear() {
+	C.wclear((*C.WINDOW)(win))
+}
+
+func (win *Window) Erase() {
+	C.werase((*C.WINDOW)(win))
+}
+
+func (win *Window) Clrtobot() {
+	C.wclrtobot((*C.WINDOW)(win))
+}
+
+func (win *Window) Clrtoeol() {
+	C.wclrtoeol((*C.WINDOW)(win))
+}
+
+func (win *Window) Box(verch, horch int) {
+	C.box((*C.WINDOW)(win), C.chtype(verch), C.chtype(horch))
+}
+
+func (win *Window) Background(colour int32) {
+	C.wbkgd((*C.WINDOW)(win), C.chtype(colour))
+}
+
+func (win *Window) Attron(flags int32) {
+	C.wattron((*C.WINDOW)(win), C.int(flags))
+}
+
+func (win *Window) Attroff(flags int32) {
+	C.wattroff((*C.WINDOW)(win), C.int(flags))
 }

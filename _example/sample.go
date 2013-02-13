@@ -32,7 +32,8 @@ func main() {
     Backspace/Del:  Delete characters (form)
     Home/End:       Move within field (form)
     Ctrl-d:         Exit`
-	screen.Addstr(0, 0, menutext, Color_pair(currentColor))
+	screen.Move(0, 0)
+	screen.Addstr(menutext /*, Color_pair(currentColor)*/)
 
 	createPanels()
 	createForm()
@@ -75,7 +76,8 @@ func createPanels() {
 	windows = []*AdjustableWindow{win1, win2, win3}
 	panels = []*Panel{NewPanel(win1.w), NewPanel(win2.w), NewPanel(win3.w)}
 
-	win3.w.Addstr(1, 1, octo, 0)
+	win3.w.Move(1, 1)
+	win3.w.Addstr(octo)
 
 	// Add borders around the panels
 	win1.w.Box(0, 0)
@@ -110,7 +112,8 @@ func createMenu() {
 	dw, _ := windows[1].w.Derwin(5, 19, 4, 3)
 	menu.SetSub(dw)
 
-	windows[1].w.Addstr(6, 2, "Border color", 0)
+	windows[1].w.Move(6, 2)
+	windows[1].w.Addstr("Border color")
 
 	menu.Post()
 	windows[1].w.Refresh()
@@ -138,18 +141,21 @@ func createForm() {
 	form.SetWin(windows[0].w)
 	form.Post()
 
-	windows[0].w.Attron(Color_pair(currentColor))
+	windows[0].w.AttrOn(Color_pair(currentColor))
 	windows[0].w.Box(0, 0)
-	windows[0].w.Attroff(Color_pair(currentColor))
+	windows[0].w.AttrOff(Color_pair(currentColor))
 
 	f1.SetBack(A_UNDERLINE)
 	f1.OptsOff(O_AUTOSKIP)
 	f2.SetBack(A_UNDERLINE)
 	f2.OptsOff(O_AUTOSKIP)
 
-	windows[0].w.Addstr(8, 2, "Sample form", 0)
-	windows[0].w.Addstr(3, 4, "1:", 0)
-	windows[0].w.Addstr(3, 6, "2:", 0)
+	windows[0].w.Move(8, 2)
+	windows[0].w.Addstr("Sample form")
+	windows[0].w.Move(3, 4)
+	windows[0].w.Addstr("1:")
+	windows[0].w.Move(3, 6)
+	windows[0].w.Addstr("2:")
 	windows[0].w.Refresh()
 }
 
@@ -170,9 +176,9 @@ func nextPanel() {
 	}
 
 	// Add colored borders to new panel
-	windows[current].w.Attron(Color_pair(currentColor))
+	windows[current].w.AttrOn(Color_pair(currentColor))
 	windows[current].w.Box(0, 0)
-	windows[current].w.Attroff(Color_pair(currentColor))
+	windows[current].w.AttrOff(Color_pair(currentColor))
 
 	panels[current].Top()
 }

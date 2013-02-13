@@ -65,8 +65,8 @@ func Init_pair(pair int, fg int, bg int) error {
 	return nil
 }
 
-func Color_pair(pair int) int32 {
-	return int32(C.COLOR_PAIR(C.int(pair)))
+func Color_pair(pair int) int {
+	return int(C.COLOR_PAIR(C.int(pair)))
 }
 
 func Noecho() error {

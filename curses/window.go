@@ -100,7 +100,7 @@ func (win *Window) Getnstr(length int) (string, error) {
 // func (win *Window) Getstr() (string, error) {
 // }
 
-func (win *Window) Move(y, x int) error {
+func (win *Window) Move(x, y int) error {
 	if C.wmove((*C.WINDOW)(win), C.int(y), C.int(x)) == C.ERR {
 		return CursesError{"wmove failed"}
 	}

@@ -431,8 +431,8 @@ func (win *Window) Mvinch(y, x int) chtype {
 	return chtype(C.mvwinch((*C.WINDOW)(win), C.int(y), C.int(x)))
 }
 
-func (win *Window) Addch(c chtype) chtype {
-	return chtype(C.waddch((*C.WINDOW)(win), C.chtype(c)))
+func (win *Window) Addch(c byte) {
+	C.waddch((*C.WINDOW)(win), C.chtype(c))
 }
 
 func (win *Window) Mvaddch(x, y int, c chtype) chtype {

@@ -69,6 +69,13 @@ func Color_pair(pair int) int {
 	return int(C.COLOR_PAIR(C.int(pair)))
 }
 
+func Beep() error {
+	if int(C.beep()) == ERR {
+		return CursesError{"Beep failed"}
+	}
+	return nil
+}
+
 func Noecho() error {
 	if int(C.noecho()) == ERR {
 		return CursesError{"Noecho failed"}

@@ -91,7 +91,7 @@ func DoUpdate() error {
 }
 
 func Echo() error {
-	if int(C.noecho()) == ERR {
+	if int(C.echo()) == ERR {
 		return CursesError{"Echo failed"}
 	}
 	return nil

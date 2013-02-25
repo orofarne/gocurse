@@ -1,6 +1,11 @@
 package curses
 
 // #define _Bool int
+// /* Must define NCURSES_OPAQUE so that curses.h (on some systems)
+//  * won't define getattr (and similar) as macros. Macro definitions
+//  * for those functions break cgo.
+//  */
+// #define NCURSES_OPAQUE 1
 // #include <curses.h>
 // #include <stdlib.h>
 import "C"

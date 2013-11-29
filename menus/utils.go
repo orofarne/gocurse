@@ -1,7 +1,8 @@
 package menus
 
 // #define _Bool int
-// #include <curses.h>
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/curses.h>
 import "C"
 
 import "unsafe"

@@ -1,12 +1,13 @@
 package panels
 
 // #define _Bool int
-// #include <panel.h>
-// #cgo LDFLAGS: -lpanel -lncurses
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/panel.h>
+// #cgo LDFLAGS: -lpanel -lncursesw
 import "C"
 
 import (
-	. "github.com/dsymonds/gocurse/curses"
+	. "github.com/orofarne/gocurse/curses"
 	"unsafe"
 )
 

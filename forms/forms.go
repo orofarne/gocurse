@@ -1,12 +1,13 @@
 package forms
 
 // #define _Bool int
-// #include <form.h>
-// #cgo LDFLAGS: -lform -lncurses
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/form.h>
+// #cgo LDFLAGS: -lform -lncursesw
 import "C"
 
 import (
-	. "github.com/dsymonds/gocurse/curses"
+	. "github.com/orofarne/gocurse/curses"
 	"unsafe"
 )
 

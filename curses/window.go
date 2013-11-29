@@ -6,11 +6,14 @@ package curses
 //  * for those functions break cgo.
 //  */
 // #define NCURSES_OPAQUE 1
-// #include <curses.h>
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/curses.h>
 // #include <stdlib.h>
+// #include <locale.h>
 import "C"
 import (
 	"fmt"
+	"github.com/orofarne/gowchar"
 	"os"
 	"unsafe"
 )
@@ -21,6 +24,10 @@ type Window C.WINDOW
 var Stdwin *Window = nil
 
 func Initscr() (*Window, error) {
+	s := C.CString("")
+	defer C.free(unsafe.Pointer(s))
+	C.setlocale(C.LC_ALL, s)
+
 	Stdwin = (*Window)(C.initscr())
 
 	if Stdwin == nil {
@@ -477,6 +484,15 @@ func (win *Window) Addstr(str string) error {
 	defer C.free(unsafe.Pointer(s))
 	if C.waddstr((*C.WINDOW)(win), s) == C.ERR {
 		return CursesError{"waddstr failed"}
+	}
+	return nil
+}
+
+func (win *Window) Addwstr(str string) error {
+	s, _ := gowchar.StringToWcharT(str)
+	defer C.free(unsafe.Pointer(s))
+	if C.waddwstr((*C.WINDOW)(win), (*C.wchar_t)(s)) == C.ERR {
+		return CursesError{"waddwstr failed"}
 	}
 	return nil
 }

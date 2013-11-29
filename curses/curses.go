@@ -4,8 +4,9 @@ package curses
 // struct ldat{};
 // #define _Bool int
 // #define NCURSES_OPAQUE 1
-// #include <curses.h>
-// #cgo LDFLAGS: -lncurses
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/curses.h>
+// #cgo LDFLAGS: -lncursesw
 import "C"
 
 import (

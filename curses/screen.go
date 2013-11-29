@@ -1,6 +1,7 @@
 package curses
 
-// #include <curses.h>
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/curses.h>
 // #include <stdlib.h>
 // char* _wplus_ = "w+";
 // char* _rplus_ = "r+";

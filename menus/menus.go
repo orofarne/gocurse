@@ -1,12 +1,13 @@
 package menus
 
 // #define _Bool int
-// #include <menu.h>
-// #cgo LDFLAGS: -lmenu -lncurses
+// #define _XOPEN_SOURCE_EXTENDED 1
+// #include <ncursesw/menu.h>
+// #cgo LDFLAGS: -lmenu -lncursesw
 import "C"
 
 import (
-	. "github.com/dsymonds/gocurse/curses"
+	. "github.com/orofarne/gocurse/curses"
 	"unsafe"
 )
 

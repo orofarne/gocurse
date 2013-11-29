@@ -13,7 +13,6 @@ package curses
 import "C"
 import (
 	"fmt"
-	"github.com/orofarne/gowchar"
 	"os"
 	"unsafe"
 )
@@ -484,15 +483,6 @@ func (win *Window) Addstr(str string) error {
 	defer C.free(unsafe.Pointer(s))
 	if C.waddstr((*C.WINDOW)(win), s) == C.ERR {
 		return CursesError{"waddstr failed"}
-	}
-	return nil
-}
-
-func (win *Window) Addwstr(str string) error {
-	s, _ := gowchar.StringToWcharT(str)
-	defer C.free(unsafe.Pointer(s))
-	if C.waddwstr((*C.WINDOW)(win), (*C.wchar_t)(s)) == C.ERR {
-		return CursesError{"waddwstr failed"}
 	}
 	return nil
 }
